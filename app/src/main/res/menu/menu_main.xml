@@ -1,0 +1,30 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.usuario.memoria.MainActivity">
+    <item
+        android:id="@+id/cedica"
+        android:icon="@drawable/ic_cedica"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:showAsAction="always"
+        android:title="Cedica"/>
+    <item
+        android:id="@+id/nivel"
+        android:icon="@drawable/ic_nivel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:showAsAction="always"
+        android:title="" />
+    <item
+        android:id="@+id/descripcion"
+        android:title="@string/descripcion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+</menu>

@@ -1,0 +1,21 @@
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- These settings headers are only used on tablets. -->
+
+   <!-- <header
+        android:fragment="com.example.usuario.memoria.SettingsActivity$GeneralPreferenceFragment"
+        android:title="@string/pref_header_general" />
+
+    <header
+        android:fragment="com.example.usuario.memoria.SettingsActivity$NotificationPreferenceFragment"
+        android:title="@string/pref_header_tiempo" />
+
+    <header
+        android:fragment="com.example.usuario.memoria.SettingsActivity$DataSyncPreferenceFragment"
+        android:title="@string/pref_header_dificultad" />
+
+    <header
+        android:fragment="com.example.usuario.memoria.SettingsActivity$GridViewPreferenceFragment"
+        android:title="@string/pref_header_imagenes" />-->
+
+</preference-headers>

@@ -1,0 +1,82 @@
+<resources>
+    <string name="app_name">MemoriaAlvaradoCastillo</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="descripcion">Memoria( nivel:experto )</string>
+    <string name="label">Pepe</string>
+    <string name="title_activity_settings">Ajustes</string>
+    <string name="title_activity_gridview">Imagenes</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="titulo_voz">Voz</string>
+    <string name="default_voz">Femenino</string>
+    <string-array name="titulos_voz">
+        <item>Masculino</item>
+        <item>Femenino</item>
+    </string-array>
+
+
+    <!-- Example settings for Data & Sync -->
+    <string name="titulo_dificultad">Dificultad</string>
+    <string name="default_dificultad">1</string>
+    <string-array name="titulos_dificultades">
+        <item>Inicial</item>
+        <item>Intermedio</item>
+        <item>Avanzado</item>
+        <item>Experto</item>
+    </string-array>
+    <string-array name="valores_dificultades">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <!-- Example settings for Notifications -->
+    <string name="titulo_tiempo">Tiempo</string>
+    <string name="default_tiempo">0</string>
+    <string-array name="titulos_tiempo">
+        <item>Ilimitado</item>
+        <item>1 minuto</item>
+        <item>2 minutos</item>
+        <item>3 minutos</item>
+    </string-array>
+    <string-array name="valores_tiempo">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string name="titulo_imagenes">Imagenes</string>
+
+    <string-array name="titulos_elementos">
+        <item>aros</item>
+        <item>arriador</item>
+        <item>bajo montura</item>
+        <item>bozal</item>
+        <item>cabezada</item>
+        <item>casco</item>
+        <item>cascos</item>
+        <item>cepillo</item>
+        <item>cinchon de volteo</item>
+        <item>cola</item>
+        <item>crines</item>
+        <item>cuerda</item>
+        <item>escarba vasos</item>
+        <item>fusta</item>
+        <item>matra</item>
+        <item>montura</item>
+        <item>monturin</item>
+        <item>ojos</item>
+        <item>orejas</item>
+        <item>palos</item>
+        <item>pasto</item>
+        <item>pelota</item>
+        <item>rasqueta</item>
+        <item>riendas</item>
+        <item>zanahoria</item>
+    </string-array>
+
+</resources>

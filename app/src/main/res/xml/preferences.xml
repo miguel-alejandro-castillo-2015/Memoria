@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:summary="%s"
+        android:defaultValue="@string/default_dificultad"
+        android:entries="@array/titulos_dificultades"
+        android:entryValues="@array/valores_dificultades"
+        android:key="@string/titulo_dificultad"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/titulo_dificultad" />
+    <ListPreference
+        android:summary="%s"
+        android:defaultValue="@string/default_voz"
+        android:entries="@array/titulos_voz"
+        android:entryValues="@array/titulos_voz"
+        android:key="@string/titulo_voz"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/titulo_voz" />
+    <ListPreference
+        android:defaultValue="@string/default_tiempo"
+        android:summary="%s"
+        android:key="titulo_tiempo"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:entries="@array/titulos_tiempo"
+        android:entryValues="@array/valores_tiempo"
+        android:title="@string/titulo_tiempo"></ListPreference>
+    <Preference
+        android:title="@string/titulo_imagenes">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.example.usuario.memoria"
+            android:targetClass="com.example.usuario.memoria.GridViewActivity" />
+
+    </Preference>
+</PreferenceScreen>

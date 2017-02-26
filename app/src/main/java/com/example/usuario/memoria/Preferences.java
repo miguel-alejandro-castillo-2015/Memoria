@@ -39,13 +39,5 @@ public class Preferences extends AppCompatPreferenceActivity {
         super.onDestroy();
 
     }
-    /*public static class ImagesSettingsFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState){
-            super.onCreate(savedInstanceState);
-            setHasOptionsMenu(true);
-            startActivity(new Intent(getActivity(), GridViewActivity.class));
-        }
-    }
-    */
+
 }

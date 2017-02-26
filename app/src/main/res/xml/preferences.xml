@@ -13,7 +13,7 @@
         android:summary="%s"
         android:defaultValue="@string/default_voz"
         android:entries="@array/titulos_voz"
-        android:entryValues="@array/titulos_voz"
+        android:entryValues="@array/valores_voz"
         android:key="@string/titulo_voz"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
@@ -21,7 +21,7 @@
     <ListPreference
         android:defaultValue="@string/default_tiempo"
         android:summary="%s"
-        android:key="titulo_tiempo"
+        android:key="@string/titulo_tiempo"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
         android:entries="@array/titulos_tiempo"

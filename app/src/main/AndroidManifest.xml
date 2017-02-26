@@ -21,7 +21,7 @@
         </activity>
         <activity
             android:name=".Preferences"
-            android:label="@string/title_activity_settings"
+            android:label="@string/titulo_ajustes"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="landscape">
             <meta-data
@@ -30,7 +30,7 @@
         </activity>
         <activity
             android:name=".GridViewActivity"
-            android:label="@string/title_activity_gridview"
+            android:label="@string/titulo_imagenes"
             android:parentActivityName=".Preferences"
             android:screenOrientation="landscape">
             <meta-data

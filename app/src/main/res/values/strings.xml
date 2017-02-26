@@ -1,19 +1,23 @@
 <resources>
     <string name="app_name">MemoriaAlvaradoCastillo</string>
-    <string name="action_settings">Ajustes</string>
+
     <string name="descripcion">Memoria( nivel:experto )</string>
     <string name="label">Pepe</string>
-    <string name="title_activity_settings">Ajustes</string>
-    <string name="title_activity_gridview">Imagenes</string>
+    <string name="titulo_ajustes">Ajustes</string>
+
 
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
     <string name="titulo_voz">Voz</string>
-    <string name="default_voz">Femenino</string>
+    <string name="default_voz">f</string>
     <string-array name="titulos_voz">
         <item>Masculino</item>
         <item>Femenino</item>
+    </string-array>
+    <string-array name="valores_voz">
+        <item>m</item>
+        <item>f</item>
     </string-array>
 
 
@@ -78,5 +82,6 @@
         <item>riendas</item>
         <item>zanahoria</item>
     </string-array>
+
 
 </resources>

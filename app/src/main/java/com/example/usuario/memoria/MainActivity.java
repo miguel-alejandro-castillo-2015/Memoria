@@ -21,8 +21,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -102,23 +104,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Gson gson=new Gson();
-        if(sharedPref.contains("imagenes")){
-            String json=sharedPref.getString("imagenes",gson.toJson(imagenes));
 
-            final List<String> imagenesGuardadas =gson.fromJson(json,new TypeToken<ArrayList<String>>() {}.getType());
-        }
-
-        final List<String> imagenesGuardadas = new ArrayList<String>(Arrays.asList("aros","arriador","bajo_montura",
-                "bozal", "cabezada","casco","cascos","cepillo","cinchon_de_volteo",
-                "cola","crines","cuerda","escarba_vasos","fusta",
-                "matra","montura","monturin","ojo","orejas",
-                "palos","pasto","pelota","rasqueta","riendas","zanahoria"));
+        String[] titulos_imagenes = getResources().getStringArray(R.array.titulos_imagenes);
+        Set<String> images=sharedPref.getStringSet("imagenes",new HashSet<String>(Arrays.asList(titulos_imagenes)));
+        final List<String> imagenesGuardadas=new ArrayList<String>(images);
 
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("imagenes", gson.toJson(imagenesGuardadas));
-        editor.commit();
-
         if(sharedPref.contains("actual") && sharedPref.contains("inicial")){
             actual = sharedPref.getInt("actual", 0) + 1;
 

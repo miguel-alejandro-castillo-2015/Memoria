@@ -50,26 +50,26 @@
     </string-array>
 
     <string name="titulo_imagenes">Imagenes</string>
-
-    <string-array name="titulos_elementos">
+    <string-array name="titulos_imagenes">
         <item>aros</item>
         <item>arriador</item>
-        <item>bajo montura</item>
+        <item>bajo_montura</item>
         <item>bozal</item>
+        <item>caballo</item>
         <item>cabezada</item>
         <item>casco</item>
         <item>cascos</item>
         <item>cepillo</item>
-        <item>cinchon de volteo</item>
+        <item>cinchon_de_volteo</item>
         <item>cola</item>
         <item>crines</item>
         <item>cuerda</item>
-        <item>escarba vasos</item>
+        <item>escarba_vasos</item>
         <item>fusta</item>
         <item>matra</item>
         <item>montura</item>
         <item>monturin</item>
-        <item>ojos</item>
+        <item>ojo</item>
         <item>orejas</item>
         <item>palos</item>
         <item>pasto</item>

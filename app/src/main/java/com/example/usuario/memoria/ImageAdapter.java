@@ -7,8 +7,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Usuario on 2/13/2017.
@@ -16,24 +17,24 @@ import java.util.List;
 
 public class ImageAdapter extends BaseAdapter {
     private Context c;
-    private List<String> imagenes;
-    private List<Integer> estados;
+    private Set<String> imagenes_seleccionadas;
+    private final List<String> imagenes;
 
-    public ImageAdapter(Context c,List<String> imagenes) {
+
+    public ImageAdapter(Context c,Set<String> imagenes_seleccionadas) {
         this.c= c;
-        this.imagenes=imagenes;
+        this.imagenes_seleccionadas=imagenes_seleccionadas;
+        this.imagenes=Arrays.asList(c.getResources().getStringArray(R.array.titulos_imagenes));
     }
 
     public int getCount() {
         return this.imagenes.size();
     }
 
-    public Object getItem(int position) {
-        return position;
+    public Object getItem(int position) { return null;
     }
 
-    public long getItemId(int position){
-        return 0;
+    public long getItemId(int position){return position;
     }
 
     // create a new ImageView for each item referenced by the Adapter
@@ -46,20 +47,17 @@ public class ImageAdapter extends BaseAdapter {
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setPadding(8, 8, 8, 8);
         } else {
-            imageView = (ImageView) convertView;
-            //imageView.invalidate();
-            if(imageView.isSelected()){
-                imageView.setBackgroundColor(Color.TRANSPARENT);
-                imageView.setSelected(false);
-            }else{
-                imageView.setBackgroundColor(Color.BLUE);
-                imageView.setSelected(true);
-            }
+            imageView = (ImageView)convertView;
         }
 
-        imageView.setImageResource(c.getResources().getIdentifier(this.imagenes.get(position),"drawable",c.getPackageName()));
-        imageView.setId(c.getResources().getIdentifier(this.imagenes.get(position),"drawable",c.getPackageName()));
+        if(this.imagenes_seleccionadas.contains((String)this.imagenes.get(position)) )
+            imageView.setBackgroundColor(Color.BLUE);
+        else
+           imageView.setBackgroundColor(Color.TRANSPARENT);
 
+        imageView.setImageResource(c.getResources().getIdentifier(this.imagenes.get(position),"drawable",c.getPackageName()));
+        //imageView.setId(c.getResources().getIdentifier(this.imagenes.get(position),"drawable",c.getPackageName()));
+        imageView.setTag(this.imagenes.get(position));
         return imageView;
     }
 

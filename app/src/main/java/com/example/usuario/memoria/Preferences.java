@@ -39,7 +39,7 @@ public class Preferences extends AppCompatPreferenceActivity {
         super.onDestroy();
 
     }
-    public static class ImagesSettingsFragment extends PreferenceFragment {
+    /*public static class ImagesSettingsFragment extends PreferenceFragment {
         @Override
         public void onCreate(Bundle savedInstanceState){
             super.onCreate(savedInstanceState);
@@ -47,4 +47,5 @@ public class Preferences extends AppCompatPreferenceActivity {
             startActivity(new Intent(getActivity(), GridViewActivity.class));
         }
     }
+    */
 }

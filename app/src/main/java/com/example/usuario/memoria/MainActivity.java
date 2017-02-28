@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView label;
     private MediaPlayer mp3;
     private boolean gane;
+    private MyPlayer Player=new MyPlayer(this);
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         final Resources res=getResources();
@@ -47,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         ImageView parlante=(ImageView)this.findViewById(R.id.parlante);
         label= (TextView) this.findViewById(R.id.label);
 
-
         label.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -55,14 +55,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {            }
             @Override
             public void afterTextChanged(Editable s) {
-                MediaPlayer mp=MediaPlayer.create(MainActivity.this.getApplicationContext(),res.getIdentifier(voz+"_"+label.getText().toString().replaceAll(" ","_"),"raw", getApplicationContext().getPackageName()));
-                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        mp.reset();mp.release();mp = null;
-                    }
-                });
-                mp.start();
+                Player.play(voz+"_"+label.getText().toString().replaceAll(" ","_"));
             }
         });
 
@@ -85,15 +78,7 @@ public class MainActivity extends AppCompatActivity {
             parlante.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view){
-                    String audio=voz+"_"+ imagen_ganadora;
-                    MediaPlayer mp=MediaPlayer.create(MainActivity.this.getApplicationContext(),res.getIdentifier(audio,"raw", getApplicationContext().getPackageName()));
-                    mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                        @Override
-                        public void onCompletion(MediaPlayer mp) {
-                            mp.reset();mp.release();mp = null;
-                        }
-                    });
-                    mp.start();
+                   Player.play(voz+"_"+imagen_ganadora);
                 }
             });
             //------------Fin del Listener del parlante---------------------------------------------
@@ -108,32 +93,25 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(final View v) {
                         gane=false;
-
-                        final int color;
+                         int color;
+                        String audio;
                         if(v.getTag().equals(imagen_ganadora)){
-                            mp3 = MediaPlayer.create(getApplicationContext(), R.raw.relincho);
+                            audio="relincho";
                             gane=true;
                             color=Color.GREEN;
                         }
                         else{
-                            mp3 = MediaPlayer.create(getApplicationContext(), R.raw.resoplido);
+                            audio="resoplido";
                             color=Color.RED;
                         }
                         v.setBackgroundColor(color);
+                        Player.play(audio);
 
-                        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                            @Override
-                            public void onCompletion(MediaPlayer mp) {
-                                mp.reset();mp.release();mp = null;
-                                v.setBackgroundColor(Color.TRANSPARENT);
-
-                            }
-                        });
-                        mp3.start();
                         Handler handler=new Handler();
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
+                                v.setBackgroundColor(Color.TRANSPARENT);
                                 if(gane){
                                     aux_lista_imagenes_seleccionadas.remove(imagen_ganadora);
                                     progressBar.setProgress(progressBar.getProgress()+1);
@@ -172,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
                             }
-                        },mp3.getDuration());
+                        },Player.getDuration(audio));
 
 
 
@@ -185,8 +163,6 @@ public class MainActivity extends AppCompatActivity {
         else{
             //informar que no se seleccionaron la cantidad suficiente de  imagenes para el nivel
         }
-
-
     }
 
     @Override
@@ -229,6 +205,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 }

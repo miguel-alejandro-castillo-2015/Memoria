@@ -1,19 +1,18 @@
 package com.example.usuario.memoria;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,20 +22,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.Delayed;
-import java.util.concurrent.Semaphore;
-
-import static java.lang.Thread.sleep;
 
 public class MainActivity extends AppCompatActivity {
-
     private String voz;
     private int nivel;
     private String imagen_ganadora;
@@ -56,6 +46,25 @@ public class MainActivity extends AppCompatActivity {
         final ProgressBar progressBar=(ProgressBar)findViewById(R.id.progress_bar);
         ImageView parlante=(ImageView)this.findViewById(R.id.parlante);
         label= (TextView) this.findViewById(R.id.label);
+
+
+        label.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {            }
+            @Override
+            public void afterTextChanged(Editable s) {
+                MediaPlayer mp=MediaPlayer.create(MainActivity.this.getApplicationContext(),res.getIdentifier(voz+"_"+label.getText().toString().replaceAll(" ","_"),"raw", getApplicationContext().getPackageName()));
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        mp.reset();mp.release();mp = null;
+                    }
+                });
+                mp.start();
+            }
+        });
 
         final Integer []image_views= new Integer[] {R.id.imageView3, R.id.imageView4, R.id.imageView5, R.id.imageView6};
         this.voz = sharedPref.getString(getString(R.string.titulo_voz),getString(R.string.default_voz));
@@ -117,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onCompletion(MediaPlayer mp) {
                                 mp.reset();mp.release();mp = null;
                                 v.setBackgroundColor(Color.TRANSPARENT);
-                                
+
                             }
                         });
                         mp3.start();
@@ -164,11 +173,6 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
                         },mp3.getDuration());
-
-
-
-
-
 
 
 

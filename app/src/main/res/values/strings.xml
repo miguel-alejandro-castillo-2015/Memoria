@@ -39,7 +39,7 @@
 
     <!-- Example settings for Notifications -->
     <string name="titulo_tiempo">Tiempo</string>
-    <string name="default_tiempo">10</string>
+    <string name="default_tiempo">0</string>
     <string-array name="titulos_tiempo">
         <item>Ilimitado</item>
         <item>10 segundos</item>

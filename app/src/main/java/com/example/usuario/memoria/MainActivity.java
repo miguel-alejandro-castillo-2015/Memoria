@@ -88,20 +88,21 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void afterTextChanged(Editable s) {
                     Player.play(voz+"_"+label.getText().toString().replaceAll(" ","_"));
-                    reloj=new CountDownTimer(tiempo*1000,1000) {
-                        @Override
-                        public void onTick(long millisUntilFinished) {
-                            texto_reloj.setText(millisUntilFinished/1000+"");
-                        }
+                    if(tiempo > 0) {
+                        reloj = new CountDownTimer(tiempo * 1000, 1000) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                texto_reloj.setText(millisUntilFinished / 1000 + "");
+                            }
 
-                        @Override
-                        public void onFinish() {
+                            @Override
+                            public void onFinish() {
                                 synchronized (MainActivity.this) {
-                                  finalizoTiempo=true;
+                                    finalizoTiempo = true;
                                 }
                                 imagen_ganadora = MyRandomizer.random(imagenes_seleccionadas, 1).get(0);
                                 imagenes.remove(imagen_ganadora);
-                                lista_views = MyRandomizer.random(imagenes, nivel-1);
+                                lista_views = MyRandomizer.random(imagenes, nivel - 1);
                                 lista_views.add(imagen_ganadora);
                                 Collections.shuffle(lista_views);
 
@@ -109,14 +110,14 @@ public class MainActivity extends AppCompatActivity {
                                     imageViews[i].setImageResource(res.getIdentifier(lista_views.get(i), "drawable", getApplicationContext().getPackageName()));
                                     imageViews[i].setTag(lista_views.get(i));
                                 }
-                                label.setText(imagen_ganadora.replaceAll("_"," "));
+                                label.setText(imagen_ganadora.replaceAll("_", " "));
                             }
                         };
-                    reloj.start();
-                    synchronized (MainActivity.this) {
-                        finalizoTiempo=false;
+                        reloj.start();
+                        synchronized (MainActivity.this) {
+                            finalizoTiempo = false;
+                        }
                     }
-
                 }
             });
             //------------Fin del Listener del Text View ---------------------------------------------
@@ -142,8 +143,9 @@ public class MainActivity extends AppCompatActivity {
                         for (ImageView imageView : imageViews)
                             imageView.setClickable(false);
                         synchronized (MainActivity.this) {
-                            if (tiempo > 0 && !finalizoTiempo){
-                                reloj.cancel();
+                            if(!finalizoTiempo){
+                                if(reloj != null)
+                                   reloj.cancel();
                                 gane = false;
                                 int color;
                                 String audio;

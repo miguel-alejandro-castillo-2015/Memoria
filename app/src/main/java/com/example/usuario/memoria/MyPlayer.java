@@ -23,11 +23,12 @@ public final class MyPlayer {
         mp.start();
     }
 
-    public long getDuration(String audio) {
+    /*public long getDuration(String audio) {
         MediaPlayer mp=this.create(audio);
         return mp.getDuration();
     }
-    private MediaPlayer create(String audio){
+    */
+    public MediaPlayer create(String audio){
         return MediaPlayer.create(context.getApplicationContext(),context.getResources().getIdentifier(audio,"raw", context.getApplicationContext().getPackageName()));
     }
 }

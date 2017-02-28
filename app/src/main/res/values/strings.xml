@@ -39,18 +39,24 @@
 
     <!-- Example settings for Notifications -->
     <string name="titulo_tiempo">Tiempo</string>
-    <string name="default_tiempo">0</string>
+    <string name="default_tiempo">10</string>
     <string-array name="titulos_tiempo">
         <item>Ilimitado</item>
-        <item>1 minuto</item>
-        <item>2 minutos</item>
-        <item>3 minutos</item>
+        <item>10 segundos</item>
+        <item>20 segundos</item>
+        <item>30 segundos</item>
+        <item>40 segundos</item>
+        <item>50 segundos</item>
+        <item>60 segundos</item>
     </string-array>
     <string-array name="valores_tiempo">
         <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>40</item>
+        <item>50</item>
+        <item>60</item>
     </string-array>
 
     <string name="titulo_imagenes">Imagenes</string>

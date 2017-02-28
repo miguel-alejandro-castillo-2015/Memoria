@@ -1,7 +1,9 @@
 package com.example.usuario.memoria;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -13,14 +15,15 @@ public class MyRandomizer{
     private final static Random random = new Random();
 
 
-    public static List<String> random(List<String> lista,int cant) {
-        List<String> aux = new ArrayList<String>();
+    public static List<String> random(Collection<String> lista,int cant) {
+        List<String> list_aux =new ArrayList<String>();
+        List<String> list_resultado=new ArrayList<String>();
+        list_aux.addAll(lista);
         for (int i = 0; i < cant; i++) {
-            int pos = random.nextInt(lista.size());
-            aux.add(lista.remove(pos));
+            int pos = random.nextInt(list_aux.size());
+            list_resultado.add(list_aux.remove(pos));
         }
-        lista.addAll(aux);
-        return aux;
+        return list_resultado;
     }
 
 

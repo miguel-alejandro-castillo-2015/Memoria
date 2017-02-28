@@ -34,10 +34,6 @@ public class Preferences extends AppCompatPreferenceActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
 
-    }
 
 }

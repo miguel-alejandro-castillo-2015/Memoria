@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,14 +35,15 @@ public class MainActivity extends AppCompatActivity {
     private String imagen_ganadora;
     private List<String> lista_views;
     private TextView label;
-    private MediaPlayer mp3;
     private boolean gane;
     private MyPlayer Player=new MyPlayer(this);
+    private  CountDownTimer reloj;
+    private ImageView []imageViews;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        final Resources res=getResources();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final Resources res=getResources();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -48,31 +52,65 @@ public class MainActivity extends AppCompatActivity {
         ImageView parlante=(ImageView)this.findViewById(R.id.parlante);
         label= (TextView) this.findViewById(R.id.label);
 
-        label.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {            }
-            @Override
-            public void afterTextChanged(Editable s) {
-                Player.play(voz+"_"+label.getText().toString().replaceAll(" ","_"));
-            }
-        });
 
-        final Integer []image_views= new Integer[] {R.id.imageView3, R.id.imageView4, R.id.imageView5, R.id.imageView6};
+        Integer []image_views= new Integer[] {R.id.imageView3, R.id.imageView4, R.id.imageView5, R.id.imageView6};
         this.voz = sharedPref.getString(getString(R.string.titulo_voz),getString(R.string.default_voz));
-
         this.nivel = Integer.parseInt(sharedPref.getString(getString(R.string.titulo_dificultad),getString(R.string.default_dificultad)));
-        String[] titulos_imagenes = res.getStringArray(R.array.titulos_imagenes);
-        Set<String> imagenes=sharedPref.getStringSet("imagenes",new HashSet<String>(Arrays.asList(titulos_imagenes)));
-        final List<String> imagenes_seleccionadas=new ArrayList<String>(imagenes);
-        final List<String> aux_lista_imagenes_seleccionadas=new ArrayList<String>(imagenes_seleccionadas);
+
+        String []titulos_imagenes=res.getStringArray(R.array.titulos_imagenes);
+        final List<String> imagenes=new ArrayList<String>(Arrays.asList(titulos_imagenes));
+        final Set<String> imagenes_seleccionadas=sharedPref.getStringSet("imagenes",new HashSet<String>(imagenes));
+
 
         if(imagenes_seleccionadas.size() >=  nivel) {
+            imageViews=new ImageView[nivel];
+            for(int i=0; i<nivel;i++)
+                imageViews[i]=(ImageView)findViewById(image_views[i]);
+
             progressBar.setMax(imagenes_seleccionadas.size());
-            lista_views = MyRandomizer.random(imagenes_seleccionadas, nivel);
-            imagen_ganadora = MyRandomizer.random(lista_views, 1).get(0);
-            label.setText(imagen_ganadora.replaceAll("_"," "));
+            imagen_ganadora = MyRandomizer.random(imagenes_seleccionadas, 1).get(0);
+            imagenes.remove(imagen_ganadora);
+            lista_views = MyRandomizer.random(imagenes, nivel-1);
+            lista_views.add(imagen_ganadora);
+            Collections.shuffle(lista_views);
+
+
+            final TextView texto_reloj = (TextView) this.findViewById(R.id.reloj);
+            final int tiempo= Integer.parseInt(sharedPref.getString(getString(R.string.titulo_tiempo),getString(R.string.default_tiempo)));
+            //------------Listener del Text View ---------------------------------------------
+            label.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {            }
+                @Override
+                public void afterTextChanged(Editable s) {
+                    Player.play(voz+"_"+label.getText().toString().replaceAll(" ","_"));
+                    /*reloj=new CountDownTimer(tiempo*1000,1000) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+                            texto_reloj.setText(millisUntilFinished/1000+"");
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            imagen_ganadora = MyRandomizer.random(imagenes_seleccionadas, 1).get(0);
+                            imagenes.remove(imagen_ganadora);
+                            lista_views = MyRandomizer.random(imagenes, nivel-1);
+                            lista_views.add(imagen_ganadora);
+                            Collections.shuffle(lista_views);
+                            for (int i = 0; i < nivel; i++) {
+                                ImageView imageView = (ImageView) findViewById(image_views[i]);
+                                imageView.setImageResource(res.getIdentifier(lista_views.get(i), "drawable", getApplicationContext().getPackageName()));
+                                imageView.setTag(lista_views.get(i));
+                            }
+                            label.setText(imagen_ganadora.replaceAll("_"," "));
+                        }
+                    }.start();
+                    */
+                }
+            });
+            //------------Fin del Listener del Text View ---------------------------------------------
 
             //------------Listener del parlante---------------------------------------------
             parlante.setOnClickListener(new View.OnClickListener(){
@@ -84,16 +122,19 @@ public class MainActivity extends AppCompatActivity {
             //------------Fin del Listener del parlante---------------------------------------------
 
             for(int i=0; i<nivel;i++){
-                ImageView imageView = (ImageView) findViewById(image_views[i]);
-                imageView.setImageResource(res.getIdentifier(lista_views.get(i), "drawable", getApplicationContext().getPackageName()));
-                imageView.setTag(lista_views.get(i));
-                imageView.setPadding(10,10,10,10);
+                imageViews[i].setImageResource(res.getIdentifier(lista_views.get(i), "drawable", getApplicationContext().getPackageName()));
+                imageViews[i].setTag(lista_views.get(i));
+                imageViews[i].setPadding(10,10,10,10);
                 //----------- Inicio del Listener de una Image View---------------------------------------------
-                imageView.setOnClickListener(new View.OnClickListener(){
+
+                imageViews[i].setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(final View v) {
+                        /*if(tiempo > 0)
+                            reloj.cancel();
+                        */
                         gane=false;
-                         int color;
+                        int color;
                         String audio;
                         if(v.getTag().equals(imagen_ganadora)){
                             audio="relincho";
@@ -105,22 +146,21 @@ public class MainActivity extends AppCompatActivity {
                             color=Color.RED;
                         }
                         v.setBackgroundColor(color);
-                        Player.play(audio);
-
-                        Handler handler=new Handler();
-                        handler.postDelayed(new Runnable() {
+                        MediaPlayer mp=Player.create(audio);
+                        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                             @Override
-                            public void run() {
+                            public void onCompletion(MediaPlayer mp) {
+                                mp.reset();mp.release();mp=null;
                                 v.setBackgroundColor(Color.TRANSPARENT);
                                 if(gane){
-                                    aux_lista_imagenes_seleccionadas.remove(imagen_ganadora);
                                     progressBar.setProgress(progressBar.getProgress()+1);
-                                    //pintar verde la imagen ganadora
+                                    imagenes_seleccionadas.remove(imagen_ganadora);
                                 }
                                 else{
                                     //pìntar rojo la imagen ganadora
                                 }
-                                if(aux_lista_imagenes_seleccionadas.isEmpty()){
+                                imagenes.add(imagen_ganadora);
+                                if(imagenes_seleccionadas.isEmpty()){
                                     final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                                     alertDialogBuilder.setCancelable(false).setPositiveButton("Jugar de nuevo", new DialogInterface.OnClickListener() {
                                         @Override
@@ -136,33 +176,34 @@ public class MainActivity extends AppCompatActivity {
                                     alertDialog.setMessage("¡Ganaste este nivel!");
                                     alertDialog.show();
                                 }else {
-                                    imagen_ganadora = MyRandomizer.random(aux_lista_imagenes_seleccionadas, 1).get(0);
-                                    imagenes_seleccionadas.remove(imagen_ganadora);
-                                    lista_views = MyRandomizer.random(imagenes_seleccionadas, nivel - 1);
+                                    imagen_ganadora = MyRandomizer.random(imagenes_seleccionadas, 1).get(0);
+                                    imagenes.remove(imagen_ganadora);
+                                    lista_views = MyRandomizer.random(imagenes, nivel-1);
                                     lista_views.add(imagen_ganadora);
-                                    lista_views = MyRandomizer.random(lista_views, nivel);
-                                    imagenes_seleccionadas.add(imagen_ganadora);
-                                    label.setText(imagen_ganadora.replaceAll("_"," "));
+                                    Collections.shuffle(lista_views);
+
                                     for (int i = 0; i < nivel; i++) {
-                                        ImageView imageView = (ImageView) findViewById(image_views[i]);
-                                        imageView.setImageResource(res.getIdentifier(lista_views.get(i), "drawable", getApplicationContext().getPackageName()));
-                                        imageView.setTag(lista_views.get(i));
+                                        imageViews[i].setImageResource(res.getIdentifier(lista_views.get(i), "drawable", getApplicationContext().getPackageName()));
+                                        imageViews[i].setTag(lista_views.get(i));
                                     }
+                                    label.setText(imagen_ganadora.replaceAll("_"," "));
                                 }
+
                             }
-                        },Player.getDuration(audio));
-
-
+                        });
+                        mp.start();
 
                     }
                 });
                 //----------- Fin del Listener de una Image View---------------------------------------------
             }
-
+            label.setText(imagen_ganadora.replaceAll("_"," "));
         }
         else{
             //informar que no se seleccionaron la cantidad suficiente de  imagenes para el nivel
         }
+
+
     }
 
     @Override

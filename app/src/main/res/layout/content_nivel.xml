@@ -26,50 +26,36 @@
         android:orientation="horizontal"
         android:weightSum="1">
 
-        <!--<ProgressBar
-            android:id="@+id/progress_bar"
-            android:minHeight="5dp"
-            android:maxHeight="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@android:style/Widget.DeviceDefault.ProgressBar.Horizontal"
-            android:layout_marginRight="5dp" />
-            -->
-        <!--<ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/progress_bar"
-            android:minHeight="5dp"
-            android:maxHeight="20dp" />
-    -->
         <TextView
+            android:textAlignment="center"
             android:text="@string/label"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/label"
             android:typeface="normal"
             android:layout_width="wrap_content"
-            android:textSize="50sp" />
+            android:textSize="50sp"
+            android:layout_weight="0.66" />
 
         <ImageView
-            android:layout_height="100dp"
+
             app:srcCompat="@drawable/ic_parlante"
             android:maxWidth="100dp"
             android:maxHeight="64dp"
             android:id="@+id/parlante"
+            android:layout_height="match_parent"
             android:contentDescription="imagen del parlante"
             android:scaleType="fitStart"
             android:adjustViewBounds="false"
-            android:layout_width="500dp" />
+            android:layout_width="wrap_content"
+            android:layout_weight="0.29" />
 
-        <!--<TextView
-            android:text="TextView"
-            android:layout_width="300dp"
-            android:layout_height="match_parent"
-            android:id="@+id/contador"
-            android:textSize="20sp"
-            android:textAlignment="center"/>
-          -->
+        <TextView
+            android:text=""
+            android:layout_height="wrap_content"
+            android:id="@+id/reloj"
+            android:typeface="normal"
+            android:layout_width="wrap_content"
+            android:textSize="50sp" />
     </LinearLayout>
 
     <LinearLayout

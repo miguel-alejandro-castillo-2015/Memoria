@@ -9,38 +9,37 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@color/colorAccent"
+    android:background="@color/colorPrimaryDark"
     tools:context="com.example.usuario.memoria.FirstActivity">
 
     <ImageView
         app:srcCompat="@drawable/imagen_principal"
         android:id="@+id/imageView"
         android:layout_height="match_parent"
-        android:background="@color/colorAccent"
+        android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:scaleType="centerInside" />
 
     <Button
         android:text="Ajustes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button2"
-        android:layout_marginEnd="30dp"
+        android:background="@color/colorBoton"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_alignBaseline="@+id/button"
         android:layout_alignBottom="@+id/button"
-        android:layout_alignParentEnd="true"
-        android:background="@color/colorBoton"
-        style="@style/Widget.AppCompat.Button.Colored" />
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:text="Jugar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button"
-        android:layout_marginStart="31dp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:background="@color/colorBoton"/>
+        android:background="@color/colorBoton"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

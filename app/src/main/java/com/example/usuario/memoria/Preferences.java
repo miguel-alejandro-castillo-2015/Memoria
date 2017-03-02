@@ -7,6 +7,7 @@ import android.preference.PreferenceFragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.Chronometer;
 
 /**
  * Created by BGH on 22/02/2017.
@@ -29,7 +30,9 @@ public class Preferences extends AppCompatPreferenceActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home )
         {
-            NavUtils.navigateUpFromSameTask(this);
+
+            //NavUtils.navigateUpFromSameTask(this);
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

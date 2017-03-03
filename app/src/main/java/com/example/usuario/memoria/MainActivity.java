@@ -3,23 +3,21 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -41,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private  ICountDownTimer timer=null;
     private ImageView []imageViews;
     private Boolean finalizoTiempo=false;
-
+    private int tiempo;
+    private Set<String> imagenes_seleccionadas;
     @Override
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         String []titulos_imagenes=res.getStringArray(R.array.titulos_imagenes);
         final List<String> imagenes=new ArrayList<String>(Arrays.asList(titulos_imagenes));
-        final Set<String> imagenes_seleccionadas=sharedPref.getStringSet("imagenes",new HashSet<String>(imagenes));
+         imagenes_seleccionadas=sharedPref.getStringSet(getString(R.string.titulo_imagenes),new HashSet<String>(imagenes));
 
 
         if(imagenes_seleccionadas.size() >=  nivel) {
@@ -72,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 imageViews[i]=(ImageView)findViewById(image_views[i]);
 
             progressBar.setMax(imagenes_seleccionadas.size());
+            progressBar.setProgress(0);
             imagen_ganadora = MyRandomizer.random(imagenes_seleccionadas, 1).get(0);
             imagenes.remove(imagen_ganadora);
             lista_views = MyRandomizer.random(imagenes, nivel-1);
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             final TextView texto_reloj = (TextView) this.findViewById(R.id.reloj);
-            final int tiempo= Integer.parseInt(sharedPref.getString(getString(R.string.titulo_tiempo),getString(R.string.default_tiempo)));
+            this.tiempo= Integer.parseInt(sharedPref.getString(getString(R.string.titulo_tiempo),getString(R.string.default_tiempo)));
             //------------Listener del Text View ---------------------------------------------
             label.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                         private long tiempoRestante;
                         private boolean pausado=false;
                         private void init(long tiempoTotal, long intervalo){
+                            tiempoRestante=tiempoTotal;
                             reloj = new CountDownTimer(tiempoTotal, intervalo) {
                                 @Override
                                 public void onTick(long millisUntilFinished) {
@@ -103,8 +104,9 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 @Override
                                 public void onFinish() {
-                                    reloj=null;
+
                                     synchronized (MainActivity.this) {
+                                        reloj=null;
                                         finalizoTiempo = true;
                                     }
                                     imagen_ganadora = MyRandomizer.random(imagenes_seleccionadas, 1).get(0);
@@ -131,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void pause(){
-                            if(isActive()) {
+                            if(isActive() &&!pausado) {
                                 pausado=true;
                                 reloj.cancel();
                             }
@@ -150,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                         public void stop() {
                             if(isActive()){
                                reloj.cancel();
-                                reloj=null;
+                               reloj=null;
                             }
                         }
 
@@ -203,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
                                     gane = true;
                                     color = Color.GREEN;
                                 } else {
+
                                     audio = "resoplido";
                                     color = Color.RED;
                                 }
@@ -229,7 +232,6 @@ public class MainActivity extends AppCompatActivity {
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     //finish();
                                                     //startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                                    progressBar.setProgress(0);
                                                     recreate();
                                                     dialog.cancel();
                                                 }
@@ -274,37 +276,54 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(timer != null && timer.isActive()){
-            System.out.println("el reloj volvio del pause");
+        if(timer != null)
             timer.resume();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String voz_conf = sharedPref.getString(getString(R.string.titulo_voz),getString(R.string.default_voz));
+        int tiempo_conf= Integer.parseInt(sharedPref.getString(getString(R.string.titulo_tiempo),getString(R.string.default_tiempo)));
+        int nivel_conf = Integer.parseInt(sharedPref.getString(getString(R.string.titulo_dificultad),getString(R.string.default_dificultad)));
+        Set<String> imagenes_seleccionadas_conf=sharedPref.getStringSet(getString(R.string.titulo_imagenes),new HashSet<String>(Arrays.asList(getResources().getStringArray(R.array.titulos_imagenes))));
+
+        if((nivel_conf != this.nivel)||(!imagenes_seleccionadas_conf.equals( this.imagenes_seleccionadas)))
+            recreate();
+        else{
+            if(imagenes_seleccionadas_conf.equals( this.imagenes_seleccionadas)){
+                System.out.println("los conjuntos son iguales");
+                List<String> list1=new ArrayList<String>(imagenes_seleccionadas_conf);
+                List<String> list2=new ArrayList<String>(this.imagenes_seleccionadas);
+                for (int i=0;i< list1.size();i++){
+                    System.out.print(list1.get(i)+"  ");
+                }
+                System.out.println();
+                for (int i=0;i< list2.size();i++){
+                    System.out.print(list2.get(i)+"  ");
+                }
+                System.out.println();
+            }
+
+
+            if(!voz_conf.equals(this.voz))
+                this.voz = voz_conf;
+            if(tiempo_conf != this.tiempo)
+                this.tiempo=tiempo_conf;
         }
 
     }
     @Override
     protected void onPause() {
         super.onPause();
-        if(timer != null && timer.isActive()){
-            System.out.println("el reloj se pauso");
+        if(timer != null)
             timer.pause();
-        }
 
     }
+
     @Override
-    protected void onPostResume(){
-        super.onPostResume();
-        //SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        //String voz = sharedPref.getString(getString(R.string.titulo_voz),getString(R.string.default_voz));
-        /*
-        if(voz.equals("Femenino")){
-            sonidos = sonidosF;
-        }else if(voz.equals("Masculino")){
-            sonidos = sonidosM;
-        }
-        */
-
-        //this.dificultad = sharedPref.getString(getString(R.string.titulo_dificultad), "0");
-
+    protected void onDestroy() {
+        if(timer != null)
+            timer.stop();
+        super.onDestroy();
     }
+
 
 
     @Override

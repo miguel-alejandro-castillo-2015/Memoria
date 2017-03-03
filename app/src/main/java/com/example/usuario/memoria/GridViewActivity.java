@@ -30,7 +30,7 @@ public class GridViewActivity extends AppCompatActivity {
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String[] titulos_imagenes = getResources().getStringArray(R.array.titulos_imagenes);
-        imagenes =sharedPref.getStringSet("imagenes",new HashSet<String>(Arrays.asList(titulos_imagenes)));
+        imagenes =sharedPref.getStringSet(getString(R.string.titulo_imagenes),new HashSet<String>(Arrays.asList(titulos_imagenes)));
 
         final GridView gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(new ImageAdapter(this, imagenes));
@@ -55,12 +55,14 @@ public class GridViewActivity extends AppCompatActivity {
 
     }
 
-    public void onDestroy() {
+
+    @Override
+    public void onPause(){
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putStringSet("imagenes", imagenes);
+        editor.putStringSet(getString(R.string.titulo_imagenes), imagenes);
         editor.commit();
-        super.onDestroy();
+        super.onPause();
     }
 
 

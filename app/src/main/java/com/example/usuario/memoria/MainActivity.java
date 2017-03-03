@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         final Resources res=getResources();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         final ProgressBar progressBar=(ProgressBar)findViewById(R.id.progress_bar);
         ImageView parlante=(ImageView)this.findViewById(R.id.parlante);
@@ -227,11 +228,25 @@ public class MainActivity extends AppCompatActivity {
                                         imagenes.add(imagen_ganadora);
                                         if (imagenes_seleccionadas.isEmpty()) {
                                             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                                            alertDialogBuilder.setCancelable(false).setPositiveButton("Jugar de nuevo", new DialogInterface.OnClickListener() {
+                                            alertDialogBuilder.setCancelable(true).setPositiveButton("Avanzar de nivel", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
-                                                    //finish();
-                                                    //startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                                    SharedPreferences.Editor editor = sharedPref.edit();
+                                                    if(nivel == 4){
+                                                        editor.putString(getString(R.string.titulo_dificultad), "1");
+                                                    }else{
+                                                        editor.putString(getString(R.string.titulo_dificultad), String.valueOf(nivel++));
+                                                    }
+                                                    editor.commit();
+                                                    progressBar.setProgress(0);
+                                                    recreate();
+                                                    dialog.cancel();
+                                                }
+                                            });
+                                            alertDialogBuilder.setCancelable(true).setNegativeButton("Repetir nivel", new DialogInterface.OnClickListener(){
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which){
+                                                    progressBar.setProgress(0);
                                                     recreate();
                                                     dialog.cancel();
                                                 }

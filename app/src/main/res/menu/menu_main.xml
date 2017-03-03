@@ -4,7 +4,7 @@
     tools:context="com.example.usuario.memoria.MainActivity">
     <item
         android:id="@+id/cedica"
-        android:icon="@drawable/ic_cedica"
+        android:icon="@drawable/cedica_logo"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         app:showAsAction="always"

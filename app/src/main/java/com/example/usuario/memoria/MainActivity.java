@@ -41,16 +41,17 @@ public class MainActivity extends AppCompatActivity {
     private ImageView []imageViews;
     private Boolean finalizoTiempo=false;
     private int tiempo;
-    private Set<String> imagenes_seleccionadas;
+    private Set<String> imagenes_seleccionadas_act=new HashSet<String>();
+    private Set<String> imagenes_seleccionadas_aux=new HashSet<String>();
     @Override
     protected void onCreate( Bundle savedInstanceState) {
+        System.out.println("entreeee al onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final Resources res=getResources();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
         final ProgressBar progressBar=(ProgressBar)findViewById(R.id.progress_bar);
         ImageView parlante=(ImageView)this.findViewById(R.id.parlante);
         label= (TextView) this.findViewById(R.id.label);
@@ -63,17 +64,16 @@ public class MainActivity extends AppCompatActivity {
 
         String []titulos_imagenes=res.getStringArray(R.array.titulos_imagenes);
         final List<String> imagenes=new ArrayList<String>(Arrays.asList(titulos_imagenes));
-         imagenes_seleccionadas=sharedPref.getStringSet(getString(R.string.titulo_imagenes),new HashSet<String>(imagenes));
+        this.imagenes_seleccionadas_act.addAll(sharedPref.getStringSet("imagenes",new HashSet<String>(imagenes)));
+        this.imagenes_seleccionadas_aux.addAll(this.imagenes_seleccionadas_act);
 
-
-        if(imagenes_seleccionadas.size() >=  nivel) {
+        if(this.imagenes_seleccionadas_aux.size() >=  nivel) {
             imageViews=new ImageView[nivel];
             for(int i=0; i<nivel;i++)
                 imageViews[i]=(ImageView)findViewById(image_views[i]);
-
-            progressBar.setMax(imagenes_seleccionadas.size());
-            progressBar.setProgress(0);
-            imagen_ganadora = MyRandomizer.random(imagenes_seleccionadas, 1).get(0);
+            //progressBar.setProgress(0);
+            progressBar.setMax(this.imagenes_seleccionadas_act.size());
+            imagen_ganadora = MyRandomizer.random(imagenes_seleccionadas_aux, 1).get(0);
             imagenes.remove(imagen_ganadora);
             lista_views = MyRandomizer.random(imagenes, nivel-1);
             lista_views.add(imagen_ganadora);
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                                         reloj=null;
                                         finalizoTiempo = true;
                                     }
-                                    imagen_ganadora = MyRandomizer.random(imagenes_seleccionadas, 1).get(0);
+                                    imagen_ganadora = MyRandomizer.random(imagenes_seleccionadas_aux, 1).get(0);
                                     imagenes.remove(imagen_ganadora);
                                     lista_views = MyRandomizer.random(imagenes, nivel - 1);
                                     lista_views.add(imagen_ganadora);
@@ -220,42 +220,42 @@ public class MainActivity extends AppCompatActivity {
                                         mp = null;
                                         v.setBackgroundColor(Color.TRANSPARENT);
                                         if (gane) {
-                                            progressBar.setProgress(progressBar.getProgress() + 1);
-                                            imagenes_seleccionadas.remove(imagen_ganadora);
+                                            progressBar.incrementProgressBy(1);
+                                            imagenes_seleccionadas_aux.remove(imagen_ganadora);
                                         } else {
                                             //pìntar rojo la imagen ganadora
                                         }
                                         imagenes.add(imagen_ganadora);
-                                        if (imagenes_seleccionadas.isEmpty()) {
+                                        if (imagenes_seleccionadas_aux.isEmpty()) {
                                             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                                             alertDialogBuilder.setCancelable(true).setPositiveButton("Avanzar de nivel", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     SharedPreferences.Editor editor = sharedPref.edit();
                                                     if(nivel == 4){
-                                                        editor.putString(getString(R.string.titulo_dificultad), "1");
+                                                        editor.putString(getString(R.string.titulo_dificultad),getString(R.string.default_dificultad));
                                                     }else{
-                                                        editor.putString(getString(R.string.titulo_dificultad), String.valueOf(nivel++));
+                                                        editor.putString(getString(R.string.titulo_dificultad), String.valueOf(++nivel));
                                                     }
                                                     editor.commit();
-                                                    progressBar.setProgress(0);
-                                                    recreate();
                                                     dialog.cancel();
+                                                    MainActivity.this.recreate();
+
                                                 }
                                             });
                                             alertDialogBuilder.setCancelable(true).setNegativeButton("Repetir nivel", new DialogInterface.OnClickListener(){
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which){
-                                                    progressBar.setProgress(0);
-                                                    recreate();
                                                     dialog.cancel();
+                                                    MainActivity.this.recreate();
                                                 }
                                             });
                                             AlertDialog alertDialog = alertDialogBuilder.create();
                                             alertDialog.setMessage("¡Ganaste este nivel!");
                                             alertDialog.show();
+                                            progressBar.setProgress(0);
                                         } else {
-                                            imagen_ganadora = MyRandomizer.random(imagenes_seleccionadas, 1).get(0);
+                                            imagen_ganadora = MyRandomizer.random(imagenes_seleccionadas_aux, 1).get(0);
                                             imagenes.remove(imagen_ganadora);
                                             lista_views = MyRandomizer.random(imagenes, nivel - 1);
                                             lista_views.add(imagen_ganadora);
@@ -297,31 +297,19 @@ public class MainActivity extends AppCompatActivity {
         String voz_conf = sharedPref.getString(getString(R.string.titulo_voz),getString(R.string.default_voz));
         int tiempo_conf= Integer.parseInt(sharedPref.getString(getString(R.string.titulo_tiempo),getString(R.string.default_tiempo)));
         int nivel_conf = Integer.parseInt(sharedPref.getString(getString(R.string.titulo_dificultad),getString(R.string.default_dificultad)));
-        Set<String> imagenes_seleccionadas_conf=sharedPref.getStringSet(getString(R.string.titulo_imagenes),new HashSet<String>(Arrays.asList(getResources().getStringArray(R.array.titulos_imagenes))));
 
-        if((nivel_conf != this.nivel)||(!imagenes_seleccionadas_conf.equals( this.imagenes_seleccionadas)))
+
+        Set<String> imagenes_seleccionadas_conf=sharedPref.getStringSet("imagenes",new HashSet<String>(Arrays.asList(getResources().getStringArray(R.array.titulos_imagenes))));
+
+        if((nivel_conf != this.nivel)||(!imagenes_seleccionadas_conf.equals( this.imagenes_seleccionadas_act))) {
+            System.out.println("debo llamar al oncreate");
             recreate();
-        else{
-            if(imagenes_seleccionadas_conf.equals( this.imagenes_seleccionadas)){
-                System.out.println("los conjuntos son iguales");
-                List<String> list1=new ArrayList<String>(imagenes_seleccionadas_conf);
-                List<String> list2=new ArrayList<String>(this.imagenes_seleccionadas);
-                for (int i=0;i< list1.size();i++){
-                    System.out.print(list1.get(i)+"  ");
-                }
-                System.out.println();
-                for (int i=0;i< list2.size();i++){
-                    System.out.print(list2.get(i)+"  ");
-                }
-                System.out.println();
-            }
-
-
-            if(!voz_conf.equals(this.voz))
-                this.voz = voz_conf;
-            if(tiempo_conf != this.tiempo)
-                this.tiempo=tiempo_conf;
         }
+        if(!voz_conf.equals(this.voz))
+                this.voz = voz_conf;
+        if(tiempo_conf != this.tiempo)
+                this.tiempo=tiempo_conf;
+
 
     }
     @Override

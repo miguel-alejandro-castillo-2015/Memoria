@@ -20,7 +20,7 @@ public class Preferences extends AppCompatPreferenceActivity {
         addPreferencesFromResource(R.xml.preferences);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayShowHomeEnabled(true);
+            //actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
@@ -30,8 +30,12 @@ public class Preferences extends AppCompatPreferenceActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home )
         {
+            /*Intent i=new Intent(this,parent);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(i);
+            */
 
-            //NavUtils.navigateUpFromSameTask(this);
             finish();
             return true;
         }

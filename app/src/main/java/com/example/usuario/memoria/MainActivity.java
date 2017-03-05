@@ -8,7 +8,7 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.SystemClock;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -43,19 +43,20 @@ public class MainActivity extends AppCompatActivity {
     private int tiempo;
     private Set<String> imagenes_seleccionadas_act=new HashSet<String>();
     private Set<String> imagenes_seleccionadas_aux=new HashSet<String>();
+    private TextView texto_reloj;
+    private ProgressBar progressBar;
+
     @Override
     protected void onCreate( Bundle savedInstanceState) {
-        System.out.println("entreeee al onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final Resources res=getResources();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        final ProgressBar progressBar=(ProgressBar)findViewById(R.id.progress_bar);
+        this.progressBar=(ProgressBar)findViewById(R.id.progress_bar);
         ImageView parlante=(ImageView)this.findViewById(R.id.parlante);
         label= (TextView) this.findViewById(R.id.label);
-
 
 
         Integer []image_views= new Integer[] {R.id.imageView3, R.id.imageView4, R.id.imageView5, R.id.imageView6};
@@ -66,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
         final List<String> imagenes=new ArrayList<String>(Arrays.asList(titulos_imagenes));
         this.imagenes_seleccionadas_act.addAll(sharedPref.getStringSet("imagenes",new HashSet<String>(imagenes)));
         this.imagenes_seleccionadas_aux.addAll(this.imagenes_seleccionadas_act);
-
         if(this.imagenes_seleccionadas_aux.size() >=  nivel) {
             imageViews=new ImageView[nivel];
             for(int i=0; i<nivel;i++)
@@ -80,8 +80,9 @@ public class MainActivity extends AppCompatActivity {
             Collections.shuffle(lista_views);
 
 
-            final TextView texto_reloj = (TextView) this.findViewById(R.id.reloj);
+             texto_reloj = (TextView) this.findViewById(R.id.reloj);
             this.tiempo= Integer.parseInt(sharedPref.getString(getString(R.string.titulo_tiempo),getString(R.string.default_tiempo)));
+
             //------------Listener del Text View ---------------------------------------------
             label.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -92,43 +93,49 @@ public class MainActivity extends AppCompatActivity {
                 public void afterTextChanged(Editable s) {
                     Player.play(voz+"_"+s.toString().replaceAll(" ","_"));
                     timer=new ICountDownTimer() {
-                        private  CountDownTimer reloj;
+                        private  CountDownTimer reloj=null;
                         private long tiempoRestante;
                         private boolean pausado=false;
-                        private void init(long tiempoTotal, long intervalo){
-                            tiempoRestante=tiempoTotal;
-                            reloj = new CountDownTimer(tiempoTotal, intervalo) {
-                                @Override
-                                public void onTick(long millisUntilFinished) {
-                                    tiempoRestante=millisUntilFinished;
-                                    texto_reloj.setText(millisUntilFinished / 1000 + "");
-                                }
-                                @Override
-                                public void onFinish() {
 
-                                    synchronized (MainActivity.this) {
-                                        reloj=null;
-                                        finalizoTiempo = true;
+                        private void init(int segundos){
+                            if(segundos > 0) {
+                                tiempoRestante = segundos * 1000;
+                                reloj = new CountDownTimer(tiempoRestante, 1000) {
+                                    @Override
+                                    public void onTick(long millisUntilFinished) {
+                                        tiempoRestante = millisUntilFinished;
+                                        MainActivity.this.texto_reloj.setText(millisUntilFinished / 1000 + "");
                                     }
-                                    imagen_ganadora = MyRandomizer.random(imagenes_seleccionadas_aux, 1).get(0);
-                                    imagenes.remove(imagen_ganadora);
-                                    lista_views = MyRandomizer.random(imagenes, nivel - 1);
-                                    lista_views.add(imagen_ganadora);
-                                    Collections.shuffle(lista_views);
-                                    for (int i = 0; i < nivel; i++) {
-                                        imageViews[i].setImageResource(res.getIdentifier(lista_views.get(i), "drawable", getApplicationContext().getPackageName()));
-                                        imageViews[i].setTag(lista_views.get(i));
+
+                                    @Override
+                                    public void onFinish() {
+                                        synchronized (MainActivity.this) {
+                                            reloj = null;
+                                            MainActivity.this.finalizoTiempo = true;
+                                        }
+                                        imagen_ganadora = MyRandomizer.random(imagenes_seleccionadas_aux, 1).get(0);
+                                        imagenes.remove(imagen_ganadora);
+                                        lista_views = MyRandomizer.random(imagenes, nivel - 1);
+                                        lista_views.add(imagen_ganadora);
+                                        Collections.shuffle(lista_views);
+                                        for (int i = 0; i < nivel; i++) {
+                                            imageViews[i].setImageResource(res.getIdentifier(lista_views.get(i), "drawable", getApplicationContext().getPackageName()));
+                                            imageViews[i].setTag(lista_views.get(i));
+                                        }
+                                        label.setText(imagen_ganadora.replaceAll("_", " "));
                                     }
-                                    label.setText(imagen_ganadora.replaceAll("_", " "));
-                                }
-                            };
+                                };
+                            }
+
                         }
+
                         @Override
                         public void start()
                         {
                             if(!isActive()){
-                                this.init(tiempo * 1000, 1000);
-                                reloj.start();
+                                init(tiempo);
+                                if(isActive())
+                                    reloj.start();
                             }
                         }
 
@@ -143,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void resume() {
                             if(isActive() && pausado) {
-                                this.init(tiempoRestante, 1000);
+                                this.init((int) (tiempoRestante/1000));
                                 reloj.start();
                                 pausado=false;
                             }
@@ -152,8 +159,8 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void stop() {
                             if(isActive()){
-                               reloj.cancel();
-                               reloj=null;
+                                reloj.cancel();
+                                reloj=null;
                             }
                         }
 
@@ -162,13 +169,12 @@ public class MainActivity extends AppCompatActivity {
                             return reloj != null;
                         }
                     };
-
-                    if(tiempo > 0) {
-                        timer.start();
-                        synchronized (MainActivity.this) {
-                            finalizoTiempo = false;
-                        }
+                    synchronized (MainActivity.this) {
+                        MainActivity.this.finalizoTiempo = false;
                     }
+                    //MainActivity.this.timer.init(MainActivity.this.tiempo);
+                    MainActivity.this.timer.start();
+
                 }
             });
             //------------Fin del Listener del Text View ---------------------------------------------
@@ -291,39 +297,44 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(timer != null)
-            timer.resume();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String voz_conf = sharedPref.getString(getString(R.string.titulo_voz),getString(R.string.default_voz));
-        int tiempo_conf= Integer.parseInt(sharedPref.getString(getString(R.string.titulo_tiempo),getString(R.string.default_tiempo)));
         int nivel_conf = Integer.parseInt(sharedPref.getString(getString(R.string.titulo_dificultad),getString(R.string.default_dificultad)));
-
-
         Set<String> imagenes_seleccionadas_conf=sharedPref.getStringSet("imagenes",new HashSet<String>(Arrays.asList(getResources().getStringArray(R.array.titulos_imagenes))));
-
-        if((nivel_conf != this.nivel)||(!imagenes_seleccionadas_conf.equals( this.imagenes_seleccionadas_act))) {
-            System.out.println("debo llamar al oncreate");
+        int tiempo_conf= Integer.parseInt(sharedPref.getString(getString(R.string.titulo_tiempo),getString(R.string.default_tiempo)));
+        if((tiempo_conf != this.tiempo)||(nivel_conf != this.nivel)||(!imagenes_seleccionadas_conf.equals( this.imagenes_seleccionadas_act))) {
             recreate();
+            progressBar.setProgress(0);
         }
-        if(!voz_conf.equals(this.voz))
+        else {
+            String voz_conf = sharedPref.getString(getString(R.string.titulo_voz),getString(R.string.default_voz));
+            if (!voz_conf.equals(this.voz))
                 this.voz = voz_conf;
-        if(tiempo_conf != this.tiempo)
-                this.tiempo=tiempo_conf;
+            timer.resume();
+        }
 
+    }
 
+    @Override
+    public void recreate(){
+        Handler handler=new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                MainActivity.super.recreate();
+            }
+        },1);
     }
     @Override
     protected void onPause() {
+        timer.pause();
         super.onPause();
-        if(timer != null)
-            timer.pause();
 
     }
 
     @Override
     protected void onDestroy() {
-        if(timer != null)
-            timer.stop();
+        timer.stop();
+        timer=null;
         super.onDestroy();
     }
 

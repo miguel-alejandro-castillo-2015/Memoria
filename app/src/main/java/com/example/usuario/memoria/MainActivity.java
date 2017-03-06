@@ -1,19 +1,16 @@
 package com.example.usuario.memoria;
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,7 +21,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private MyPlayer Player=new MyPlayer(this);
     private  ICountDownTimer timer=null;
     private ImageView []imageViews;
-    private Boolean finalizoTiempo=false;
+    private boolean finalizoTiempo;
     private int tiempo;
     private Set<String> imagenes_seleccionadas_act=new HashSet<String>();
     private Set<String> imagenes_seleccionadas_aux=new HashSet<String>();
@@ -56,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final Resources res=getResources();
+        finalizoTiempo=false;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -117,10 +114,12 @@ public class MainActivity extends AppCompatActivity {
                                     @Override
                                     public void onFinish() {
                                         texto_reloj.setText("0");
-                                        synchronized (MainActivity.this) {
+                                        reloj = null;
+                                       /* synchronized (MainActivity.this) {
                                             reloj = null;
                                             MainActivity.this.finalizoTiempo = true;
-                                        }
+                                        }*/
+                                        MainActivity.this.finalizoTiempo(true);
                                         imagen_ganadora = MyRandomizer.random(imagenes_seleccionadas_aux, 1).get(0);
                                         imagenes.remove(imagen_ganadora);
                                         lista_views = MyRandomizer.random(imagenes, nivel - 1);
@@ -180,11 +179,10 @@ public class MainActivity extends AppCompatActivity {
                             return reloj != null;
                         }
                     };
-                    synchronized (MainActivity.this) {
-                        MainActivity.this.finalizoTiempo = false;
-                    }
-                    //MainActivity.this.timer.init(MainActivity.this.tiempo);
-                    MainActivity.this.timer.start();
+
+                    timer.start();
+                    if(timer.isActive())
+                        MainActivity.this.finalizoTiempo(false);
 
                 }
             });
@@ -209,8 +207,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(final View v) {
                         int myID=MainActivity.this.getID();
-                        synchronized (MainActivity.this) {
-                            if(!finalizoTiempo && myID==1){
+                        if(!MainActivity.this.finalizoTiempo() && myID==1){
                                 parlante.setClickable(false);
                                 item_ajustes.setEnabled(false);
                                 for (ImageView imageView : imageViews)
@@ -294,10 +291,7 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 });
 
-                            }//fin_del_if_de_hay_tiempo
-                            }//fin_del_codigo_sincronizado
-
-
+                            }//fin de if(!MainActivity.this.finalizoTiempo() && myID==1)
 
                         }
 
@@ -317,6 +311,12 @@ public class MainActivity extends AppCompatActivity {
     }
     private synchronized void resetID(){
         this.id=0;
+    }
+    private synchronized boolean finalizoTiempo(){
+        return this.finalizoTiempo;
+    }
+    private synchronized void  finalizoTiempo(boolean value){
+        this.finalizoTiempo=value;
     }
     @Override
     protected void onResume() {
@@ -361,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
         timer=null;
         super.onDestroy();
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

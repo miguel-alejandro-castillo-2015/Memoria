@@ -1,5 +1,4 @@
 package com.example.usuario.memoria;
-
 import android.content.Context;
 import android.media.MediaPlayer;
 
@@ -20,14 +19,15 @@ public final class MyPlayer {
                 mp.reset();mp.release();mp = null;
             }
         });
-        mp.start();
+        mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.start();
+            }
+        });
+
     }
 
-    /*public long getDuration(String audio) {
-        MediaPlayer mp=this.create(audio);
-        return mp.getDuration();
-    }
-    */
     public MediaPlayer create(String audio){
         return MediaPlayer.create(context.getApplicationContext(),context.getResources().getIdentifier(audio,"raw", context.getApplicationContext().getPackageName()));
     }

@@ -301,6 +301,7 @@ public class MainActivity extends AppCompatActivity {
             label.setText(imagen_ganadora.replaceAll("_"," "));
         }
         else{
+            System.out.println("entro acaaa");
             //informar que no se seleccionaron la cantidad suficiente de  imagenes para el nivel
         }
 
@@ -333,7 +334,8 @@ public class MainActivity extends AppCompatActivity {
             String voz_conf = sharedPref.getString(getString(R.string.titulo_voz),getString(R.string.default_voz));
             if (!voz_conf.equals(this.voz))
                 this.voz = voz_conf;
-            timer.resume();
+            if(timer != null)
+               timer.resume();
         }
 
     }
@@ -350,15 +352,18 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     protected void onPause() {
-        timer.pause();
+        if(timer != null)
+           timer.pause();
         super.onPause();
 
     }
 
     @Override
     protected void onDestroy() {
-        timer.stop();
-        timer=null;
+        if(timer != null) {
+            timer.stop();
+            timer = null;
+        }
         super.onDestroy();
     }
 

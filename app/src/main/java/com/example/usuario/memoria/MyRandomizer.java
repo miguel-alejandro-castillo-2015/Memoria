@@ -16,14 +16,18 @@ public class MyRandomizer{
 
 
     public static List<String> random(Collection<String> lista,int cant) {
-        List<String> list_aux =new ArrayList<String>();
+        List<String> list=new ArrayList<String>(lista);
         List<String> list_resultado=new ArrayList<String>();
-        list_aux.addAll(lista);
         for (int i = 0; i < cant; i++) {
-            int pos = random.nextInt(list_aux.size());
-            list_resultado.add(list_aux.remove(pos));
+            String item=anyItem(list);
+             list_resultado.add(item);
+             list.remove(item);
         }
         return list_resultado;
+    }
+    public  static String anyItem(List<String> list){
+        int index=random.nextInt(list.size());
+        return list.get(index);
     }
 
 

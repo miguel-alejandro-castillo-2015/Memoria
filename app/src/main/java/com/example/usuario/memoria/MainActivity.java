@@ -21,7 +21,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,23 +38,26 @@ public class MainActivity extends AppCompatActivity {
     private MyPlayer Player=new MyPlayer(this);
     private  ICountDownTimer timer=null;
     private ImageView []imageViews;
-    private Boolean finalizoTiempo=false;
+    private boolean finalizoTiempo;
     private int tiempo;
     private Set<String> imagenes_seleccionadas_act=new HashSet<String>();
     private Set<String> imagenes_seleccionadas_aux=new HashSet<String>();
     private TextView texto_reloj;
     private ProgressBar progressBar;
+    private MenuItem item_ajustes;
+    private int id=0;
 
     @Override
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final Resources res=getResources();
+        finalizoTiempo=false;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         this.progressBar=(ProgressBar)findViewById(R.id.progress_bar);
-        ImageView parlante=(ImageView)this.findViewById(R.id.parlante);
+        final ImageView parlante=(ImageView)this.findViewById(R.id.parlante);
         label= (TextView) this.findViewById(R.id.label);
 
 
@@ -73,9 +75,11 @@ public class MainActivity extends AppCompatActivity {
                 imageViews[i]=(ImageView)findViewById(image_views[i]);
             //progressBar.setProgress(0);
             progressBar.setMax(this.imagenes_seleccionadas_act.size());
+
             imagen_ganadora = MyRandomizer.random(imagenes_seleccionadas_aux, 1).get(0);
             imagenes.remove(imagen_ganadora);
             lista_views = MyRandomizer.random(imagenes, nivel-1);
+            imagenes.add(imagen_ganadora);
             lista_views.add(imagen_ganadora);
             Collections.shuffle(lista_views);
 
@@ -99,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
                         private void init(int segundos){
                             if(segundos > 0) {
-                                tiempoRestante = segundos * 1000;
+                                tiempoRestante = ++segundos * 1000;
                                 reloj = new CountDownTimer(tiempoRestante, 1000) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
@@ -109,13 +113,17 @@ public class MainActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onFinish() {
-                                        synchronized (MainActivity.this) {
+                                        texto_reloj.setText("0");
+                                        reloj = null;
+                                       /* synchronized (MainActivity.this) {
                                             reloj = null;
                                             MainActivity.this.finalizoTiempo = true;
-                                        }
+                                        }*/
+                                        MainActivity.this.finalizoTiempo(true);
                                         imagen_ganadora = MyRandomizer.random(imagenes_seleccionadas_aux, 1).get(0);
                                         imagenes.remove(imagen_ganadora);
                                         lista_views = MyRandomizer.random(imagenes, nivel - 1);
+                                        imagenes.add(imagen_ganadora);
                                         lista_views.add(imagen_ganadora);
                                         Collections.shuffle(lista_views);
                                         for (int i = 0; i < nivel; i++) {
@@ -123,6 +131,8 @@ public class MainActivity extends AppCompatActivity {
                                             imageViews[i].setTag(lista_views.get(i));
                                         }
                                         label.setText(imagen_ganadora.replaceAll("_", " "));
+
+
                                     }
                                 };
                             }
@@ -169,11 +179,10 @@ public class MainActivity extends AppCompatActivity {
                             return reloj != null;
                         }
                     };
-                    synchronized (MainActivity.this) {
-                        MainActivity.this.finalizoTiempo = false;
-                    }
-                    //MainActivity.this.timer.init(MainActivity.this.tiempo);
-                    MainActivity.this.timer.start();
+
+                    timer.start();
+                    if(timer.isActive())
+                        MainActivity.this.finalizoTiempo(false);
 
                 }
             });
@@ -197,11 +206,12 @@ public class MainActivity extends AppCompatActivity {
                 imageViews[i].setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(final View v) {
-
-                        for (ImageView imageView : imageViews)
-                            imageView.setClickable(false);
-                        synchronized (MainActivity.this) {
-                            if(!finalizoTiempo){
+                        int myID=MainActivity.this.getID();
+                        if(!MainActivity.this.finalizoTiempo() && myID==1){
+                                parlante.setClickable(false);
+                                item_ajustes.setEnabled(false);
+                                for (ImageView imageView : imageViews)
+                                    imageView.setClickable(false);
                                 if(timer != null)
                                    timer.stop();
                                 gane = false;
@@ -212,7 +222,6 @@ public class MainActivity extends AppCompatActivity {
                                     gane = true;
                                     color = Color.GREEN;
                                 } else {
-
                                     audio = "resoplido";
                                     color = Color.RED;
                                 }
@@ -221,17 +230,12 @@ public class MainActivity extends AppCompatActivity {
                                 mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                                     @Override
                                     public void onCompletion(MediaPlayer mp) {
-                                        mp.reset();
-                                        mp.release();
-                                        mp = null;
+                                        mp.reset();mp.release();mp = null;
                                         v.setBackgroundColor(Color.TRANSPARENT);
                                         if (gane) {
                                             progressBar.incrementProgressBy(1);
                                             imagenes_seleccionadas_aux.remove(imagen_ganadora);
-                                        } else {
-                                            //pìntar rojo la imagen ganadora
                                         }
-                                        imagenes.add(imagen_ganadora);
                                         if (imagenes_seleccionadas_aux.isEmpty()) {
                                             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                                             alertDialogBuilder.setCancelable(true).setPositiveButton("Avanzar de nivel", new DialogInterface.OnClickListener() {
@@ -245,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
                                                     }
                                                     editor.commit();
                                                     dialog.cancel();
-                                                    MainActivity.this.recreate();
+                                                    MainActivity.super.recreate();
 
                                                 }
                                             });
@@ -253,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which){
                                                     dialog.cancel();
-                                                    MainActivity.this.recreate();
+                                                    MainActivity.super.recreate();
                                                 }
                                             });
                                             AlertDialog alertDialog = alertDialogBuilder.create();
@@ -264,23 +268,31 @@ public class MainActivity extends AppCompatActivity {
                                             imagen_ganadora = MyRandomizer.random(imagenes_seleccionadas_aux, 1).get(0);
                                             imagenes.remove(imagen_ganadora);
                                             lista_views = MyRandomizer.random(imagenes, nivel - 1);
+                                            imagenes.add(imagen_ganadora);
                                             lista_views.add(imagen_ganadora);
                                             Collections.shuffle(lista_views);
-
                                             for (int i = 0; i < nivel; i++) {
                                                 imageViews[i].setImageResource(res.getIdentifier(lista_views.get(i), "drawable", getApplicationContext().getPackageName()));
                                                 imageViews[i].setTag(lista_views.get(i));
                                             }
                                             label.setText(imagen_ganadora.replaceAll("_", " "));
                                         }
+                                        parlante.setClickable(true);
+                                        item_ajustes.setEnabled(true);
                                         for (ImageView imageView : imageViews)
                                             imageView.setClickable(true);
-
+                                        MainActivity.this.resetID();
                                     }
                                 });
-                                mp.start();
-                            }
-                            }
+                                mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                    @Override
+                                    public void onPrepared(MediaPlayer mp) {
+                                        mp.start();
+                                    }
+                                });
+
+                            }//fin de if(!MainActivity.this.finalizoTiempo() && myID==1)
+
                         }
 
                 });
@@ -293,6 +305,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+    }
+    private synchronized  int getID(){
+        return ++this.id;
+    }
+    private synchronized void resetID(){
+        this.id=0;
+    }
+    private synchronized boolean finalizoTiempo(){
+        return this.finalizoTiempo;
+    }
+    private synchronized void  finalizoTiempo(boolean value){
+        this.finalizoTiempo=value;
     }
     @Override
     protected void onResume() {
@@ -338,19 +362,17 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         MenuItem item = menu.findItem(R.id.descripcion);
+         item_ajustes=menu.findItem(R.id.titulo_ajustes);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String dificultad = sharedPref.getString(getString(R.string.titulo_dificultad),getString(R.string.default_dificultad));
         String[] dificultades = getResources().getStringArray(R.array.titulos_dificultades);
         String nivel=dificultades[Integer.parseInt(dificultad)-1];
         item.setTitle("Memoria( nivel:"+nivel+" )");
-
         return true;
     }
 
@@ -363,6 +385,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 }

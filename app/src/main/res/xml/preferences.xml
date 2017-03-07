@@ -8,7 +8,8 @@
         android:key="@string/titulo_dificultad"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
-        android:title="@string/titulo_dificultad" />
+        android:title="@string/titulo_dificultad"
+        android:icon="@android:drawable/ic_menu_edit" />
     <ListPreference
         android:summary="%s"
         android:defaultValue="@string/default_voz"
@@ -17,7 +18,8 @@
         android:key="@string/titulo_voz"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
-        android:title="@string/titulo_voz" />
+        android:title="@string/titulo_voz"
+        android:icon="@drawable/ic_parlante" />
     <ListPreference
         android:defaultValue="@string/default_tiempo"
         android:summary="%s"
@@ -26,10 +28,12 @@
         android:positiveButtonText="@null"
         android:entries="@array/titulos_tiempo"
         android:entryValues="@array/valores_tiempo"
-        android:title="@string/titulo_tiempo"></ListPreference>
+        android:title="@string/titulo_tiempo"
+        android:icon="@android:drawable/ic_lock_idle_alarm"></ListPreference>
     <Preference
         android:key="@string/titulo_imagenes"
-        android:title="@string/titulo_imagenes">
+        android:title="@string/titulo_imagenes"
+        android:icon="@android:drawable/ic_menu_gallery">
         <intent
             android:action="android.intent.action.VIEW"
             android:targetPackage="com.example.usuario.memoria"

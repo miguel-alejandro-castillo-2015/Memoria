@@ -29,5 +29,14 @@ public class FirstActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), Preferences.class));
             }
         });
+
+        Button boton3 = (Button) findViewById(R.id.button3);
+
+        boton3.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                 finish();
+            }
+        });
     }
 }

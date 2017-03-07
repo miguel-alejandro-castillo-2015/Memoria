@@ -362,15 +362,18 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     protected void onPause() {
-        timer.pause();
+        if(timer != null)
+            timer.pause();
         super.onPause();
 
     }
 
     @Override
     protected void onDestroy() {
-        timer.stop();
-        timer=null;
+        if(timer != null) {
+            timer.stop();
+            timer = null;
+        }
         super.onDestroy();
     }
 

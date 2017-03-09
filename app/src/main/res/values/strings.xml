@@ -4,6 +4,7 @@
     <string name="descripcion">Memoria( nivel:experto )</string>
     <string name="label">Pepe</string>
     <string name="titulo_ajustes">Ajustes</string>
+    <string name="titulo_salir">Salir del nivel</string>
 
 
     <!-- Strings related to Settings -->

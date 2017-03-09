@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 imageViews[i]=(ImageView)findViewById(image_views[i]);
             //progressBar.setProgress(0);
             progressBar.setMax(this.imagenes_seleccionadas_act.size());
-
+            progressBar.getIndeterminateDrawable().setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_IN);
             imagen_ganadora = MyRandomizer.random(imagenes_seleccionadas_aux, 1).get(0);
             imagenes.remove(imagen_ganadora);
             lista_views = MyRandomizer.random(imagenes, nivel-1);
@@ -300,10 +302,20 @@ public class MainActivity extends AppCompatActivity {
             }
             label.setText(imagen_ganadora.replaceAll("_"," "));
         }
-        /*else{
-            System.out.println("entro acaaa");
-            //informar que no se seleccionaron la cantidad suficiente de  imagenes para el nivel
-        }*/
+        else{
+            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+            alertDialogBuilder.setCancelable(true).setPositiveButton("Ir a pantalla de ajustes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                    startActivity(new Intent(getApplicationContext(), Preferences.class));
+                }
+            });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.setMessage("No se seleccionaron las imagenes suficientes para este nivel");
+            alertDialog.show();
+        }
+
 
 
     }
@@ -334,8 +346,7 @@ public class MainActivity extends AppCompatActivity {
             String voz_conf = sharedPref.getString(getString(R.string.titulo_voz),getString(R.string.default_voz));
             if (!voz_conf.equals(this.voz))
                 this.voz = voz_conf;
-            if(timer != null)
-               timer.resume();
+            timer.resume();
         }
 
     }
@@ -353,7 +364,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         if(timer != null)
-           timer.pause();
+            timer.pause();
         super.onPause();
 
     }
@@ -387,6 +398,9 @@ public class MainActivity extends AppCompatActivity {
         if(id == R.id.titulo_ajustes){
             startActivity(new Intent(getApplicationContext(), Preferences.class));
             return true;
+        }
+        if(id == R.id.titulo_salir){
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }

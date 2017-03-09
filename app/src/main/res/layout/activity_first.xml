@@ -15,12 +15,13 @@
     <ImageView
         app:srcCompat="@drawable/imagen_principal"
         android:id="@+id/imageView"
-        android:layout_height="match_parent"
         android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:scaleType="centerInside" />
+        android:scaleType="centerInside"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/button3" />
 
     <Button
         android:text="Ajustes"
@@ -31,7 +32,8 @@
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_alignBaseline="@+id/button"
         android:layout_alignBottom="@+id/button"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:drawableLeft="@android:drawable/ic_menu_preferences" />
 
     <Button
         android:text="Jugar"
@@ -41,5 +43,17 @@
         style="@style/Widget.AppCompat.Button.Colored"
         android:background="@color/colorBoton"
         android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:drawableLeft="@android:drawable/ic_media_play" />
+
+    <Button
+        android:text="Salir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/button3"
+        android:background="@color/colorBoton"
+        android:textAppearance="@android:style/TextAppearance.Material.Widget.Button.Colored"
+        android:drawableLeft="@android:drawable/ic_menu_revert" />
 </RelativeLayout>

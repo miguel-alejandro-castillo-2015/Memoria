@@ -300,10 +300,10 @@ public class MainActivity extends AppCompatActivity {
             }
             label.setText(imagen_ganadora.replaceAll("_"," "));
         }
-        else{
+        /*else{
             System.out.println("entro acaaa");
             //informar que no se seleccionaron la cantidad suficiente de  imagenes para el nivel
-        }
+        }*/
 
 
     }

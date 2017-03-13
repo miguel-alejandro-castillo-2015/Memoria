@@ -240,28 +240,34 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                         if (imagenes_seleccionadas_aux.isEmpty()) {
                                             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                                            alertDialogBuilder.setCancelable(true).setPositiveButton("Avanzar de nivel", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    SharedPreferences.Editor editor = sharedPref.edit();
-                                                    if(nivel == 4){
-                                                        editor.putString(getString(R.string.titulo_dificultad),getString(R.string.default_dificultad));
-                                                    }else{
+                                            if(nivel < 3){
+                                                alertDialogBuilder.setCancelable(true).setPositiveButton("Avanzar de nivel", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        SharedPreferences.Editor editor = sharedPref.edit();
                                                         editor.putString(getString(R.string.titulo_dificultad), String.valueOf(++nivel));
-                                                    }
-                                                    editor.commit();
-                                                    dialog.cancel();
-                                                    MainActivity.super.recreate();
+                                                        editor.commit();
+                                                        dialog.cancel();
+                                                        MainActivity.super.recreate();
 
-                                                }
-                                            });
-                                            alertDialogBuilder.setCancelable(true).setNegativeButton("Repetir nivel", new DialogInterface.OnClickListener(){
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which){
-                                                    dialog.cancel();
-                                                    MainActivity.super.recreate();
-                                                }
-                                            });
+                                                    }
+                                                });
+                                                alertDialogBuilder.setCancelable(true).setNegativeButton("Repetir nivel", new DialogInterface.OnClickListener(){
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which){
+                                                        dialog.cancel();
+                                                        MainActivity.super.recreate();
+                                                    }
+                                                });
+                                            }else{
+                                                alertDialogBuilder.setCancelable(true).setNegativeButton("Repetir nivel", new DialogInterface.OnClickListener(){
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which){
+                                                        dialog.cancel();
+                                                        MainActivity.super.recreate();
+                                                    }
+                                                });
+                                            }
                                             AlertDialog alertDialog = alertDialogBuilder.create();
                                             alertDialog.setMessage("¡Ganaste este nivel!");
                                             alertDialog.show();

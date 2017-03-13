@@ -35,21 +35,20 @@
             android:id="@+id/label"
             android:typeface="normal"
             android:layout_width="wrap_content"
-            android:textSize="50sp"
+            android:textSize="90sp"
             android:layout_weight="0.66" />
 
         <ImageView
 
             app:srcCompat="@drawable/ic_parlante"
-            android:maxWidth="100dp"
-            android:maxHeight="64dp"
+            android:maxWidth="40dp"
+            android:maxHeight="40dp"
             android:id="@+id/parlante"
-            android:layout_height="match_parent"
+            android:layout_height="86dp"
             android:contentDescription="imagen del parlante"
-            android:scaleType="fitStart"
+            android:scaleType="fitCenter"
             android:adjustViewBounds="false"
-            android:layout_width="wrap_content"
-            android:layout_weight="0.29" />
+            android:layout_width="49dp" />
 
         <TextView
             android:text=""

@@ -32,15 +32,6 @@ public class FirstActivity extends AppCompatActivity {
             }
         });
 
-        Button boton3 = (Button) findViewById(R.id.button3);
-
-        boton3.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                 finish();
-            }
-        });
-
         Button boton4 = (Button) findViewById(R.id.button4);
 
         boton4.setOnClickListener(new View.OnClickListener(){

@@ -232,15 +232,16 @@ public class MainActivity extends AppCompatActivity {
                                 mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                                     @Override
                                     public void onCompletion(MediaPlayer mp) {
-                                        mp.reset();mp.release();mp = null;
+                                        mp.reset();
+                                        mp.release();
+                                        mp = null;
                                         v.setBackgroundColor(Color.TRANSPARENT);
                                         if (gane) {
                                             progressBar.incrementProgressBy(1);
                                             imagenes_seleccionadas_aux.remove(imagen_ganadora);
-                                        }
-                                        if (imagenes_seleccionadas_aux.isEmpty()) {
+                                           if (imagenes_seleccionadas_aux.isEmpty()) {
                                             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                                            if(nivel < 3){
+                                            if (nivel < 3) {
                                                 alertDialogBuilder.setCancelable(true).setPositiveButton("Avanzar de nivel", new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
@@ -252,17 +253,17 @@ public class MainActivity extends AppCompatActivity {
 
                                                     }
                                                 });
-                                                alertDialogBuilder.setCancelable(true).setNegativeButton("Repetir nivel", new DialogInterface.OnClickListener(){
+                                                alertDialogBuilder.setCancelable(true).setNegativeButton("Repetir nivel", new DialogInterface.OnClickListener() {
                                                     @Override
-                                                    public void onClick(DialogInterface dialog, int which){
+                                                    public void onClick(DialogInterface dialog, int which) {
                                                         dialog.cancel();
                                                         MainActivity.super.recreate();
                                                     }
                                                 });
-                                            }else{
-                                                alertDialogBuilder.setCancelable(true).setNegativeButton("Repetir nivel", new DialogInterface.OnClickListener(){
+                                            } else {
+                                                alertDialogBuilder.setCancelable(true).setNegativeButton("Repetir nivel", new DialogInterface.OnClickListener() {
                                                     @Override
-                                                    public void onClick(DialogInterface dialog, int which){
+                                                    public void onClick(DialogInterface dialog, int which) {
                                                         dialog.cancel();
                                                         MainActivity.super.recreate();
                                                     }
@@ -284,6 +285,10 @@ public class MainActivity extends AppCompatActivity {
                                                 imageViews[i].setTag(lista_views.get(i));
                                             }
                                             label.setText(imagen_ganadora.replaceAll("_", " "));
+                                        }
+                                    }
+                                    else{
+                                        texto_reloj.setText("");
                                         }
                                         parlante.setClickable(true);
                                         item_ajustes.setEnabled(true);
@@ -352,7 +357,8 @@ public class MainActivity extends AppCompatActivity {
             String voz_conf = sharedPref.getString(getString(R.string.titulo_voz),getString(R.string.default_voz));
             if (!voz_conf.equals(this.voz))
                 this.voz = voz_conf;
-            timer.resume();
+            if(timer != null)
+               timer.resume();
         }
 
     }

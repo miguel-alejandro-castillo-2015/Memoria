@@ -32,6 +32,7 @@
                 android:value="com.example.usuario.memoria.FirstActivity" />
         </activity>
         <activity
+
             android:name="com.example.usuario.memoria.Preferences"
             android:label="@string/titulo_ajustes"
             android:launchMode="singleTop"

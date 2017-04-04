@@ -1,5 +1,6 @@
 package com.example.usuario.memoria;
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -242,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
                                            if (imagenes_seleccionadas_aux.isEmpty()) {
                                             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                                             if (nivel < 4) {
-                                                alertDialogBuilder.setCancelable(true).setPositiveButton("Avanzar de nivel", new DialogInterface.OnClickListener() {
+                                                alertDialogBuilder.setCancelable(false).setPositiveButton("Avanzar de nivel", new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         SharedPreferences.Editor editor = sharedPref.edit();
@@ -253,23 +254,15 @@ public class MainActivity extends AppCompatActivity {
 
                                                     }
                                                 });
-                                                /*alertDialogBuilder.setCancelable(true).setNegativeButton("Repetir nivel", new DialogInterface.OnClickListener() {
+                                            }
+                                                alertDialogBuilder.setCancelable(false).setNegativeButton("Repetir nivel", new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         dialog.cancel();
                                                         MainActivity.super.recreate();
                                                     }
                                                 });
-                                                */
-                                            } //else {ºº
-                                                alertDialogBuilder.setCancelable(true).setNegativeButton("Repetir nivel", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        dialog.cancel();
-                                                        MainActivity.super.recreate();
-                                                    }
-                                                });
-                                            //}
+
                                             AlertDialog alertDialog = alertDialogBuilder.create();
                                             alertDialog.setMessage("¡Ganaste este nivel!");
                                             alertDialog.show();
@@ -316,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-            alertDialogBuilder.setCancelable(true).setPositiveButton("Ir a pantalla de ajustes", new DialogInterface.OnClickListener() {
+            alertDialogBuilder.setCancelable(false).setPositiveButton("Ir a pantalla de ajustes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();

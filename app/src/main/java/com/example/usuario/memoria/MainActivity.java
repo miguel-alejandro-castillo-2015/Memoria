@@ -318,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.setMessage("No se seleccionaron las imagenes suficientes para este nivel");
+            alertDialog.setMessage("Seleccione al menos una imagen para poder jugar");
             alertDialog.show();
         }
 

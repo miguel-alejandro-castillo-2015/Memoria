@@ -215,12 +215,13 @@ public class MainActivity extends AppCompatActivity {
                                 item_ajustes.setEnabled(false);
                                 for (ImageView imageView : imageViews)
                                     imageView.setClickable(false);
-                                if(timer != null)
-                                   timer.stop();
+
                                 gane = false;
                                 int color;
                                 String audio;
                                 if (v.getTag().equals(imagen_ganadora)) {
+                                    if(timer != null)
+                                        timer.stop();
                                     audio = "relincho";
                                     gane = true;
                                     color = Color.GREEN;
@@ -282,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     }
                                     else{
-                                        texto_reloj.setText("");
+                                        //texto_reloj.setText("");
                                         }
                                         parlante.setClickable(true);
                                         item_ajustes.setEnabled(true);

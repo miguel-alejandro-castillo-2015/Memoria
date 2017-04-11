@@ -310,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-            alertDialogBuilder.setCancelable(true).setPositiveButton("Ir a pantalla de ajustes", new DialogInterface.OnClickListener() {
+            alertDialogBuilder.setCancelable(false).setPositiveButton("Ir a pantalla de ajustes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();

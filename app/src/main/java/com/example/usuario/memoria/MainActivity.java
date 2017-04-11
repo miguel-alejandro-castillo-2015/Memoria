@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         final List<String> imagenes=new ArrayList<String>(Arrays.asList(titulos_imagenes));
         this.imagenes_seleccionadas_act.addAll(sharedPref.getStringSet("imagenes",new HashSet<String>(imagenes)));
         this.imagenes_seleccionadas_aux.addAll(this.imagenes_seleccionadas_act);
-        if(this.imagenes_seleccionadas_aux.size() >=  nivel) {
+        if(this.imagenes_seleccionadas_aux.size() > 0) {
             imageViews=new ImageView[nivel];
             for(int i=0; i<nivel;i++)
                 imageViews[i]=(ImageView)findViewById(image_views[i]);
@@ -310,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-            alertDialogBuilder.setCancelable(false).setPositiveButton("Ir a pantalla de ajustes", new DialogInterface.OnClickListener() {
+            alertDialogBuilder.setCancelable(true).setPositiveButton("Ir a pantalla de ajustes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();

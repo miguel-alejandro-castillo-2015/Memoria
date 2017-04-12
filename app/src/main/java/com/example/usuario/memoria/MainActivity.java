@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         Integer []image_views= new Integer[] {R.id.imageView3, R.id.imageView4, R.id.imageView5, R.id.imageView6};
         this.voz = sharedPref.getString(getString(R.string.titulo_voz),getString(R.string.default_voz));
         this.nivel = Integer.parseInt(sharedPref.getString(getString(R.string.titulo_dificultad),getString(R.string.default_dificultad)));
+        this.tiempo= Integer.parseInt(sharedPref.getString(getString(R.string.titulo_tiempo),getString(R.string.default_tiempo)));
 
         String []titulos_imagenes=res.getStringArray(R.array.titulos_imagenes);
         final List<String> imagenes=new ArrayList<String>(Arrays.asList(titulos_imagenes));
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
 
              texto_reloj = (TextView) this.findViewById(R.id.reloj);
-            this.tiempo= Integer.parseInt(sharedPref.getString(getString(R.string.titulo_tiempo),getString(R.string.default_tiempo)));
+
 
             //------------Listener del Text View ---------------------------------------------
             label.addTextChangedListener(new TextWatcher() {
@@ -344,9 +345,11 @@ public class MainActivity extends AppCompatActivity {
         int nivel_conf = Integer.parseInt(sharedPref.getString(getString(R.string.titulo_dificultad),getString(R.string.default_dificultad)));
         Set<String> imagenes_seleccionadas_conf=sharedPref.getStringSet("imagenes",new HashSet<String>(Arrays.asList(getResources().getStringArray(R.array.titulos_imagenes))));
         int tiempo_conf= Integer.parseInt(sharedPref.getString(getString(R.string.titulo_tiempo),getString(R.string.default_tiempo)));
-        if((tiempo_conf != this.tiempo)||(nivel_conf != this.nivel)||(!imagenes_seleccionadas_conf.equals( this.imagenes_seleccionadas_act))) {
-            recreate();
-            progressBar.setProgress(0);
+        if((tiempo_conf != this.tiempo)||(nivel_conf != this.nivel)||(!imagenes_seleccionadas_conf.equals( this.imagenes_seleccionadas_act))||((imagenes_seleccionadas_act.size()==0)&&(imagenes_seleccionadas_conf.size()==0))) {
+
+                recreate();
+                progressBar.setProgress(0);
+
         }
         else {
             String voz_conf = sharedPref.getString(getString(R.string.titulo_voz),getString(R.string.default_voz));

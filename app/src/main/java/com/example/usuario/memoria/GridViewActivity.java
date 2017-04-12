@@ -1,9 +1,14 @@
 package com.example.usuario.memoria;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -26,6 +31,11 @@ public class GridViewActivity extends AppCompatActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            //actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         setContentView(R.layout.gridlayout);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -54,8 +64,30 @@ public class GridViewActivity extends AppCompatActivity {
         });
 
     }
-
-
+    /*@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //if(item.getItemId() == android.R.id.home )
+        //{
+          if(this.imagenes.size() > 0) {
+              finish();
+              return true;
+          }
+          else{
+              final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+              alertDialogBuilder.setCancelable(false).setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialog, int which) {
+                      dialog.cancel();
+                  }
+              });
+              AlertDialog alertDialog = alertDialogBuilder.create();
+              alertDialog.setMessage("Seleccione al menos una imagen para poder jugar");
+              alertDialog.show();
+          }
+        //}
+        return super.onOptionsItemSelected(item);
+    }
+    */
     @Override
     public void onPause(){
         super.onPause();
